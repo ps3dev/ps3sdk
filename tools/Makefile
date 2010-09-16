@@ -1,7 +1,7 @@
 CC = gcc -std=c99 -Wall -pedantic
 LIBS = -lssl
 
-TARGETS = pkg-pack pkg-unpack
+TARGETS = pkg-pack pkg-unpack pup-unpack
 
 default: all
 
@@ -15,3 +15,6 @@ pkg-pack: endian.h pkg.c pkg.h pkg-pack.c
 
 pkg-unpack: endian.h pkg.c pkg.h pkg-unpack.c
 	$(CC) pkg.c pkg-unpack.c $(LIBS) -o pkg-unpack
+
+pup-unpack: endian.h pup.c pup.h pup-unpack.c
+	$(CC) pup.c pup-unpack.c $(LIBS) -o pup-unpack

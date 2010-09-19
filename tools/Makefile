@@ -1,5 +1,11 @@
 CC = gcc -std=c99 -Wall -pedantic
-LIBS = -lssl
+UNAME := $(shell uname)
+
+ifeq ($(UNAME),Darwin)
+	LIBS = -lcrypto
+else
+	LIBS = -lssl
+endif
 
 TARGETS = pkg-pack pkg-unpack pup-unpack
 

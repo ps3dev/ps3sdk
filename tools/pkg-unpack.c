@@ -142,7 +142,7 @@ int main ( int argc, char **argv )
 	printf ( "WRITE %s\n", filename );
 
 	FILE *outfile = fopen ( filename, "w" );
-	if ( outFile == NULL )
+	if ( outfile == NULL )
         {
           printf ( "ERROR: could not open '%s' for writing\n", filename );
           return -1;

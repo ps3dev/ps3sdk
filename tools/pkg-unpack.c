@@ -12,6 +12,8 @@
 #include "endian.h"
 #include "pkg.h"
 
+#define MAX_FILENAME_LEN 100
+
 int main ( int argc, char **argv )
 {
   //
@@ -105,7 +107,13 @@ int main ( int argc, char **argv )
 
   for ( int loop = 0; loop < fix32 ( pkgHeader.pkgEntityCount ); loop++ )
   {
-    char filename[100] = { 0 };
+    char filename[MAX_FILENAME_LEN] = { 0 };
+
+    if (MAX_FILENAME_LEN - 1 < 1 + strlen ( argv[2] ) + fix32 ( pkgEntities[loop]->entityNameSize ) )
+    {
+      printf("Path name is too long for buffer, aborting\n");
+      return -1;
+    }
 
     sprintf ( filename, "%s/", argv[2] );
     strncat ( filename, pkgEntityNames[loop], fix32 ( pkgEntities[loop]->entityNameSize )  );

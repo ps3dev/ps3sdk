@@ -13,6 +13,7 @@ enum
   TYPE_DIRECTORY     = 4
 };
 
+#define TYPE_MASK         0x0FFFFFFF
 #define OVERWRITE_ALLOWED 0x80000000
 
 typedef struct

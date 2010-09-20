@@ -3,6 +3,7 @@
 // by Dan Peori (dan.peori@oopo.net)
 //
 
+#include <errno.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -99,7 +100,11 @@ int main ( int argc, char **argv )
   // Create the output directory.
   //
 
-  mkdir ( argv[2], 0777 );
+  if ( 0 != mkdir ( argv[2], 0777 ) && errno != EEXIST )
+  {
+    printf("ERROR: could not create directory '%s'.\n", argv[2]);
+    return -1;
+  }
 
   //
   // Write out the package data entities.
@@ -124,7 +129,11 @@ int main ( int argc, char **argv )
       {
 	printf ( "MKDIR %s\n", filename );
 
-	mkdir ( filename, 0777 );
+	if ( 0 != mkdir ( filename, 0777 ) && errno != EEXIST )
+        {
+          printf("ERROR: could not create directory '%s'\n", filename);
+          return -1;
+        }
       }
       break;
 
@@ -133,6 +142,11 @@ int main ( int argc, char **argv )
 	printf ( "WRITE %s\n", filename );
 
 	FILE *outfile = fopen ( filename, "w" );
+	if ( outFile == NULL )
+        {
+          printf ( "ERROR: could not open '%s' for writing\n", filename );
+          return -1;
+        }
 	fwrite ( pkgEntityDatas[loop], fix32 ( pkgEntities[loop]->entityDataSize ), 1, outfile );
 	fclose ( outfile );
       }

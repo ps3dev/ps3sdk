@@ -77,11 +77,11 @@ int main ( int argc, char **argv )
   // Parse the package data entities.
   //
 
-  PKGENTITY_t *pkgEntities[100];
+  PKGENTITY_t *pkgEntities[fix32 ( pkgHeader.pkgEntityCount )];
 
-  char *pkgEntityNames[100];
+  char *pkgEntityNames[fix32 ( pkgHeader.pkgEntityCount )];
 
-  uint8_t *pkgEntityDatas[100];
+  uint8_t *pkgEntityDatas[fix32 ( pkgHeader.pkgEntityCount )];
 
   for ( int loop = 0; loop < fix32 ( pkgHeader.pkgEntityCount ); loop++ )
   {
@@ -110,9 +110,9 @@ int main ( int argc, char **argv )
     sprintf ( filename, "%s/", argv[2] );
     strncat ( filename, pkgEntityNames[loop], fix32 ( pkgEntities[loop]->entityNameSize )  );
 
-    switch ( fix32 ( pkgEntities[loop]->entityType ) )
+    switch ( TYPE_MASK & fix32 ( pkgEntities[loop]->entityType ) )
     {
-      case 0x80000004:
+      case TYPE_DIRECTORY:
       {
 	printf ( "MKDIR %s\n", filename );
 

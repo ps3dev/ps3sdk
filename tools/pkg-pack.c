@@ -32,6 +32,7 @@ typedef struct
   int nameSize;
   uint8_t *data;
   int dataSize;
+  int entityType;
 }
 ENTITY_t;
 
@@ -71,58 +72,67 @@ void parseDirectory ( char *directory, char *subdirectory )
 
       if ( subdirectory == NULL )
       {
-	strcpy ( fullname, entry->d_name );
+        strcpy ( fullname, entry->d_name );
       }
       else
       {
-	sprintf ( fullname, "%s/%s", subdirectory, entry->d_name );
+        sprintf ( fullname, "%s/%s", subdirectory, entry->d_name );
       }
 
       switch ( entry->d_type )
       {
-	case 4: // DT_DIR:
+        case 4: // DT_DIR:
 
-	  if ( strncmp ( entry->d_name, ".", 1 ) != 0 )
-	  {
-	    memset ( &entities[entityCount], 0, sizeof ( ENTITY_t ) );
+          if ( strncmp ( entry->d_name, ".", 1 ) != 0 )
+          {
+            memset ( &entities[entityCount], 0, sizeof ( ENTITY_t ) );
 
-	    strcpy ( entities[entityCount].name, fullname );
-	    entities[entityCount].nameSize = strlen ( fullname );
-	    totalNameSize += ( entities[entityCount].nameSize + 15 ) & 0xFFFFFFF0;
+            entities[entityCount].entityType = OVERWRITE_ALLOWED | TYPE_DIRECTORY;
+            strcpy ( entities[entityCount].name, fullname );
+            entities[entityCount].nameSize = strlen ( fullname );
+            totalNameSize += ( entities[entityCount].nameSize + 15 ) & 0xFFFFFFF0;
 
-	    entities[entityCount].data = NULL;
-	    entities[entityCount].dataSize = 0;
-	    totalDataSize += ( entities[entityCount].dataSize + 15 ) & 0xFFFFFFF0;
+            entities[entityCount].data = NULL;
+            entities[entityCount].dataSize = 0;
+            totalDataSize += ( entities[entityCount].dataSize + 15 ) & 0xFFFFFFF0;
 
-	    entityCount++;
+            entityCount++;
 
-	    parseDirectory ( directory, fullname );
-	  }
+            parseDirectory ( directory, fullname );
+          }
 
-	  break;
+          break;
 
-	case 8: // DT_REG:
-	{
-	  memset ( &entities[entityCount], 0, sizeof ( ENTITY_t ) );
+        case 8: // DT_REG:
+        {
+          memset ( &entities[entityCount], 0, sizeof ( ENTITY_t ) );
 
-	  strcpy ( entities[entityCount].name, fullname );
-	  entities[entityCount].nameSize = strlen ( fullname );
-	  totalNameSize += ( entities[entityCount].nameSize + 15 ) & 0xFFFFFFF0;
+          if (strcmp("USRDIR/EBOOT.BIN", fullname) == 0)
+          {
+            entities[entityCount].entityType = OVERWRITE_ALLOWED | TYPE_NPDRMSELF;
+          }
+          else
+          {
+            entities[entityCount].entityType = OVERWRITE_ALLOWED | TYPE_RAW;
+          }
+          strcpy ( entities[entityCount].name, fullname );
+          entities[entityCount].nameSize = strlen ( fullname );
+          totalNameSize += ( entities[entityCount].nameSize + 15 ) & 0xFFFFFFF0;
 
-	  char filename[100];
-	  sprintf ( filename, "%s/%s", directory, fullname );
-	  FILE *infile = fopen ( filename, "r" );
-	  fseek ( infile, 0, SEEK_END );
-	  entities[entityCount].dataSize = ftell ( infile );
-	  entities[entityCount].data = malloc ( entities[entityCount].dataSize );
-	  fseek ( infile, 0, SEEK_SET );
-	  fread ( entities[entityCount].data, entities[entityCount].dataSize, 1, infile );
-	  fclose ( infile );
-	  totalDataSize += ( entities[entityCount].dataSize + 15 ) & 0xFFFFFFF0;
+          char filename[100];
+          sprintf ( filename, "%s/%s", directory, fullname );
+          FILE *infile = fopen ( filename, "r" );
+          fseek ( infile, 0, SEEK_END );
+          entities[entityCount].dataSize = ftell ( infile );
+          entities[entityCount].data = malloc ( entities[entityCount].dataSize );
+          fseek ( infile, 0, SEEK_SET );
+          fread ( entities[entityCount].data, entities[entityCount].dataSize, 1, infile );
+          fclose ( infile );
+          totalDataSize += ( entities[entityCount].dataSize + 15 ) & 0xFFFFFFF0;
 
-	  entityCount++;
-	}
-	break;
+          entityCount++;
+        }
+        break;
       }
     }
 
@@ -209,15 +219,7 @@ int main ( int argc, char **argv )
   {
     pkgEntities[loop].entityNameSize = fix32 ( entities[loop].nameSize );
     pkgEntities[loop].entityDataSize = fix32 ( entities[loop].dataSize );
-
-    if ( pkgEntities[loop].entityDataSize > 0 )
-    {
-      pkgEntities[loop].entityType = fix32 ( 0x80000001 );
-    }
-    else
-    {
-      pkgEntities[loop].entityType = fix32 ( 0x80000004 );
-    }
+    pkgEntities[loop].entityType     = fix32 ( entities[loop].entityType );  
 
     dataPointer += sizeof ( PKGENTITY_t );
   }

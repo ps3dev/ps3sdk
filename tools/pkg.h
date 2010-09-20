@@ -6,6 +6,15 @@
 #ifndef __PKG_H__
 #define __PKG_H__
 
+enum
+{
+  TYPE_NPDRMSELF     = 1,
+  TYPE_RAW           = 3,
+  TYPE_DIRECTORY     = 4
+};
+
+#define OVERWRITE_ALLOWED 0x80000000
+
 typedef struct
 {
   uint32_t magicNumber;

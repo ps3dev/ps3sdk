@@ -83,7 +83,7 @@ int main ( int argc, char **argv )
       {
 	char filename[256] = { 0 };
 
-	sprintf ( filename, "%s/%s", argv[2], pupGetFilename ( &fileHeaders[loop1] ) );
+	snprintf ( filename, sizeof filename, "%s/%s", argv[2], pupGetFilename ( &fileHeaders[loop1] ) );
 
 	FILE *outfile = fopen ( filename, "w" );
 

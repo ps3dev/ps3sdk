@@ -1,6 +1,6 @@
 //
 // pup.h
-// by Dan Peori (dan.peori@oopo.net)
+// by Naomi Peori (naomi@peori.ca)
 //
 
 #ifndef __PUP_H__

@@ -1,6 +1,6 @@
 //
 // self.h
-// by Dan Peori (dan.peori@oopo.net)
+// by Naomi Peori (naomi@peori.ca)
 //
 
 #ifndef __SELF_H__

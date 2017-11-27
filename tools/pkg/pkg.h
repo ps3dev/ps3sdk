@@ -1,6 +1,6 @@
 //
 // pkg.h
-// by Dan Peori (dan.peori@oopo.net)
+// by Naomi Peori (naomi@peori.ca)
 //
 
 #ifndef __PKG_H__

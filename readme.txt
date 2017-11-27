@@ -4,4 +4,4 @@ Under development.
 
 AUTHORS
 
-ooPo - Dan Peori (dan.peori@oopo.net)
+ooPo - Naomi Peori (naomi@peori.ca)

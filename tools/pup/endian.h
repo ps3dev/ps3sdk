@@ -1,6 +1,6 @@
 //
 // endian.h
-// by Dan Peori (dan.peori@oopo.net)
+// by Naomi Peori (naomi@peori.ca)
 //
 
 #ifndef __ENDIAN_H__

@@ -1,6 +1,6 @@
 //
 // pup-unpack.c
-// by Dan Peori (dan.peori@oopo.net)
+// by Naomi Peori (naomi@peori.ca)
 //
 
 #include <stdio.h>

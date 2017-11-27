@@ -1,4 +1,4 @@
-Copyright (c) 2011, Dan Peori <dan.peori@oopo.net>
+Copyright (c) 2011, Naomi Peori <naomi@peori.ca>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
